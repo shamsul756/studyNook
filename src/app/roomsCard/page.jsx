@@ -1,7 +1,9 @@
 import { Button } from "@heroui/react";
 import Image from "next/image";
+import Link from "next/link";
 
 const RoomCard = ({ room }) => {
+  
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-lg transition hover:shadow-xl">
       <div className="relative h-56 w-full">
@@ -48,7 +50,12 @@ const RoomCard = ({ room }) => {
             </span>
           ))}
         </div>
-        <Button className={'w-full my-3'}>View Details</Button>
+          <Link href={`/allroom/${room._id}`}>
+          <Button className="w-full my-3">
+            View Details
+          </Button>
+        
+        </Link>
       </div>
     </div>
   );

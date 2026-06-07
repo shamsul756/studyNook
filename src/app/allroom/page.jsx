@@ -3,6 +3,7 @@ import { Search, Filter } from "lucide-react";
 import { Label, SearchField } from "@heroui/react";
 import RoomCard from "../roomsCard/page";
 
+
 const fetchCards = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studies`);
   const data = await res.json();
@@ -10,6 +11,7 @@ const fetchCards = async () => {
 };
 
 const AllRoomsPage = async () => {
+ 
   const studies = await fetchCards();
 
   return (
