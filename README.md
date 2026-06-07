@@ -1,3 +1,13 @@
+<!-- navbar  -->
+![alt text](image.png)
+<!-- banner  -->
+![alt text](image-1.png)
+<!-- footer -->
+![alt text](image-2.png)
+<!-- libary section  -->
+![alt text](image-3.png)
+<!-- extra book section  -->
+![alt text](image-4.png)
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
