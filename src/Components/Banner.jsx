@@ -38,7 +38,7 @@ const Banner = () => {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center animate__animated animate__zoomIn animate__delay-2s">
 
             <Link
-              href="/allrooms"
+              href="/allroom"
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg transition"
             >
               Explore Rooms →

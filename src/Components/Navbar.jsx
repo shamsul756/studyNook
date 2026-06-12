@@ -1,180 +1,241 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
+import { BookOpen, Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Button } from "@heroui/react";
+import Image from "next/image";
+import { signOut, useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
-const NavbarPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
+export function MainNavbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
+  const { data: session, isPending } = useSession();
+  
 
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "All Rooms", path: "/allroom" },
-    { name: "Add Room", path: "/add-room" },
-    { name: "My Listing", path: "/my-listing" },
-    { name: "My Booking", path: "/my-booking" },
-  ];
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const handleProfileAction = (action) => {
-    setProfileOpen(false);
-
-    if (action === "profile") router.push("/profile");
-    if (action === "booking") router.push("/my-booking");
-    if (action === "listing") router.push("/my-listing");
-    if (action === "logout") {
-      console.log("logout clicked");
-    }
+  const handleLogOut = async () => {
+    await signOut();
+    router.push("/");
   };
 
   return (
-    <nav className="bg-white shadow-md relative">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between h-20">
-
+    <nav
+      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? "bg-white/70 backdrop-blur-md shadow-sm py-2" : "bg-slate-50 py-4"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <Link href="/">
-            <Image
-              src="/logo.png"
-              width={80}
-              height={80}
-              alt="Logo"
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-500 shadow-md"
-            />
-          </Link>
-
-          {/* Desktop Menu */}
-          <ul className="hidden lg:flex items-center gap-6 text-gray-700 font-medium">
-            {navLinks.map((link) => (
-              <li key={link.path}>
-                <Link
-                  href={link.path}
-                  className="hover:text-blue-600 transition"
-                >
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* Desktop Buttons */}
-          <div className="hidden lg:flex items-center gap-3 relative">
-
-            {/* PROFILE DROPDOWN */}
-            <div className="relative">
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Profile
-              </button>
-
-              {profileOpen && (
-                <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
-                  <button
-                    onClick={() => handleProfileAction("profile")}
-                    className="w-full text-black text-left px-4 py-2 hover:bg-gray-300"
-                  >
-                    My Profile
-                  </button>
-
-                  <button
-                    onClick={() => handleProfileAction("booking")}
-                    className="w-full text-black text-left px-4 py-2 hover:bg-gray-300"
-                  >
-                    My Booking
-                  </button>
-
-                  <button
-                    onClick={() => handleProfileAction("listing")}
-                    className="w-full text-black text-left px-4 py-2 hover:bg-gray-300"
-                  >
-                    My Listing
-                  </button>
-
-                  <button
-                    onClick={() => handleProfileAction("logout")}
-                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href="/login"
-              className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50"
-            >
-              Log In
-            </Link>
-
-            <Link
-              href="/register"
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            >
-              Register
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="p-2 bg-blue-600 rounded-xl group-hover:rotate-12 transition-transform">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <span className="font-extrabold text-2xl tracking-tight text-slate-900">
+                StudyNook
+              </span>
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
-          <button
-            className="lg:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={30} /> : <Menu size={30} />}
-          </button>
-        </div>
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex gap-8 items-center">
+            <Link
+              href="/"
+              className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
+            >
+              Home
+            </Link>
 
-        {/* Mobile Menu */}
-        <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            isOpen ? "max-h-[500px] py-4" : "max-h-0"
-          }`}
-        >
-          <ul className="flex flex-col gap-4 text-gray-700 font-medium">
-            {navLinks.map((link) => (
-              <li key={link.path}>
+            <Link
+              href="/allroom"
+              className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
+            >
+              All Rooms
+            </Link>
+
+            <Link
+              href="/addroom"
+              className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
+            >
+              Add Room
+            </Link>
+
+            {/* Conditional Auth Links */}
+            {session?.user && (
+              <>
                 <Link
-                  href={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className="block hover:text-blue-600"
+                  href="/my-listing"
+                  className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
                 >
-                  {link.name}
+                  My Listing
                 </Link>
-              </li>
-            ))}
-          </ul>
 
-          <div className="flex flex-col gap-3 mt-6">
-            <Link
-              href="/profile"
-              className="text-center px-4 py-2 bg-blue-600 text-white rounded-lg"
-            >
-              Profile
-            </Link>
+                <Link
+                  href="/my-booking"
+                  className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  My Booking
+                </Link>
+              </>
+            )}
+          </div>
 
-            <Link
-              href="/login"
-              className="text-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg"
-            >
-              Log In
-            </Link>
+          {/* Desktop Auth Buttons / Profile Dropdown */}
+          <div className="hidden md:flex items-center gap-4">
+            {!isPending && !session ? (
+              <>
+                <Link
+                  href="/login"
+                  className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
+                >
+                  Login
+                </Link>
+                <Link href="/register">
+                  <Button
+                    color="primary"
+                    className="font-bold rounded-full px-8 shadow-lg shadow-blue-600/20"
+                  >
+                    Register
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <div className="relative group">
+                <button className="flex items-center gap-3 p-1 rounded-full hover:bg-muted transition-colors border border-transparent hover:border-border">
+                  <Image
+                    width={40}
+                    height={40}
+                    src={session?.user?.image}
+                    alt="avatar"
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-blue-600/10"
+                  />
+                  <div className="text-left hidden lg:block">
+                    <p className="text-sm font-bold truncate max-w-25">
+                      {session?.user?.name}
+                    </p>
+                    <p className="text-[10px] text-slate-500">
+                      {session?.user?.email}
+                    </p>
+                  </div>
+                </button>
 
-            <Link
-              href="/signup"
-              className="text-center px-4 py-2 bg-green-600 text-white rounded-lg"
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 top-12 w-56 bg-white border border-slate-200 rounded-2xl shadow-2xl hidden group-hover:flex flex-col py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <p className="font-bold text-sm">Welcome back!</p>
+                    <p className="text-xs truncate text-slate-500">
+                      {session?.user?.email}
+                    </p>
+                  </div>
+                 
+                  <Link
+                    href="/settings"
+                    className="px-4 py-2 text-sm hover:bg-muted flex items-center gap-3 transition-colors"
+                  >
+                    <User className="w-4 h-4" /> Settings
+                  </Link>
+                  <button
+                    onClick={handleLogOut}
+                    className="px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-3 transition-colors text-left w-full"
+                  >
+                    <LogOut className="w-4 h-4" /> Log Out
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Hamburger Button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
             >
-              Register
-            </Link>
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden px-4 pt-2 pb-6 space-y-2 bg-white border-b border-slate-200 animate-in slide-in-from-top duration-300">
+          <Link
+            href="/"
+            className="block px-4 py-3 text-base font-medium text-slate-900 hover:bg-slate-50 rounded-xl"
+          >
+            Home
+          </Link>
+          <Link
+            href="/allroom"
+            className="block px-4 py-3 text-base font-medium text-slate-900 hover:bg-slate-50 rounded-xl"
+          >
+            All Rooms
+          </Link>
+          <Link
+            href="/addroom"
+            className="block px-4 py-3 text-base font-medium text-slate-900 hover:bg-slate-50 rounded-xl"
+          >
+            Add Room
+          </Link>
+
+          {session?.user && (
+            <>
+              <Link
+                href="/my-listing"
+                className="block px-4 py-3 text-base font-medium text-blue-600 hover:bg-blue-50 rounded-xl"
+              >
+                My Listing
+              </Link>
+              <Link
+                href="/my-booking"
+                className="block px-4 py-3 text-base font-medium text-blue-600 hover:bg-blue-50 rounded-xl"
+              >
+                My Booking
+              </Link>
+            
+            </>
+          )}
+
+          <div className="pt-4 border-t border-slate-200 mt-4">
+            {!session ? (
+              <div className="grid grid-cols-2 gap-4">
+                <Link href="/login">
+                  <Button variant="bordered" className="rounded-xl w-full">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button color="primary" className="rounded-xl w-full">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <p className="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Account
+                </p>
+                <button
+                  onClick={handleLogOut}
+                  className="block w-full text-left px-4 py-3 text-base font-medium text-red-500 hover:bg-red-50 rounded-xl"
+                >
+                  Log Out
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
-};
-
-export default NavbarPage;
+}

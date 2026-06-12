@@ -28,9 +28,9 @@ export default function Register() {
             toast.error("Registration failed")
             return;
         }
-        router.push("/")
+        router.push("/login")
 
-
+      
     }
 
     return (
