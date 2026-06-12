@@ -8,6 +8,7 @@ import Image from "next/image";
 import { signOut, useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
+
 export function MainNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -114,7 +115,7 @@ export function MainNavbar() {
                   <Image
                     width={40}
                     height={40}
-                    src={session?.user?.image}
+                    src={session?.user?.image || "/default-avatar.png"}
                     alt="avatar"
                     className="w-10 h-10 rounded-full object-cover ring-2 ring-blue-600/10"
                   />

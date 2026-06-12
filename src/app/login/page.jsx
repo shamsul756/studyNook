@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 
 import Image from 'next/image';
-import { signIn } from '@/lib/auth-client';
+import { authClient, signIn } from '@/lib/auth-client';
 import toast from 'react-hot-toast';
 
 export default function Login() {
@@ -128,7 +128,7 @@ export default function Login() {
                                 type="submit"
                                 className="w-full h-14 text-lg font-black rounded-2xl shadow-xl shadow-blue-600/20 group"
                             >
-                               log In <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                log In <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </form>
 
